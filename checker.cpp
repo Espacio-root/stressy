@@ -18,7 +18,7 @@ int solve() {
     return sm;
 }
 
-bool checker(string tc_string, string ans, string &feedback) {
+bool checker(string tc_string, string ans, stringstream &feedback) {
     stringstream ss_in(tc_string), ss_ans(ans);
 
     int res; ss_ans<<ans;
@@ -48,28 +48,30 @@ void stress() {
         cout.rdbuf(original_cout);
 
         // void return type
-        // stringstream ss_in_fast(tc_string);
-        // ostringstream ss_out_fast;
-        // cin.rdbuf(ss_in_fast.rdbuf());
-        // cout.rdbuf(ss_out_fast.rdbuf());
-        // solve();
-        // auto fast_ans=ss_out_fast.str();
+        stringstream ss_in_fast(tc_string);
+        ostringstream ss_out_fast;
+        cin.rdbuf(ss_in_fast.rdbuf());
+        cout.rdbuf(ss_out_fast.rdbuf());
+        solve();
+        auto ans=ss_out_fast.str();
 
         // non-void return type
-        stringstream ss_in(tc_string);
-        cin.rdbuf(ss_in.rdbuf());
+        // stringstream ss_in(tc_string);
+        // cin.rdbuf(ss_in.rdbuf());
+        //
+        // stringstream ss_out;
+        // ss_out<<solve();
+        // string ans=ss_out.str();
 
-        stringstream ss_out;
-        ss_out<<solve();
-        string ans=ss_out.str();
-
-        string feedback;
+        stringstream feedback;
 
         if (!checker(tc_string, ans, feedback)) {
             cin.rdbuf(original_cin);
+            cout.rdbuf(original_cout);
             cout << "Wrong Answer found on Test " << test_cases << "!\n";
-            if (!feedback.empty()) {
-                cout << "--- Feedback -- \n" << feedback << "\n";
+            string feedback_str=feedback.str();
+            if (!feedback_str.empty()) {
+                cout << "--- Feedback -- \n" << feedback_str << "\n";
             }
             cout << "--- Input ---\n" << tc_string;
             cout << "--- Output ---\n" << ans << "\n";
@@ -78,6 +80,7 @@ void stress() {
 
         if (test_cases % 1000 == 0) {
             cin.rdbuf(original_cin);
+            cout.rdbuf(original_cout);
             cout << test_cases << " tests passed...\n";
         }
     }
